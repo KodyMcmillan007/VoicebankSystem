@@ -5,6 +5,16 @@
     </head>
     <body>
         <h1> Welcome to the home page!</h1>
-        
+        <table>
+        {% for line in send_data %}
+        <tr>
+            {% for item in line %}
+            <td>
+            {{ item }}
+            </td>
+            {% endfor %}
+            </tr>
+            {% endfor %}
+        </table>
     </body>
 </html>
