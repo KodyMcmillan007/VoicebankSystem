@@ -13,6 +13,6 @@ def home():
     cursor.execute(sql)
     results = cursor.fetchall()
     return render_template('index.html', send_data = results)
-
+#---------------------------------------------------
 if __name__ == '__main__':
     app.run(debug=True)

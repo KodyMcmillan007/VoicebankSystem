@@ -2,3 +2,20 @@
 h1 {
     color:cyan;
 }
+
+table {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th{
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+    color: whitesmoke;
+}
+
+tr{
+    background-color: black;
+}
