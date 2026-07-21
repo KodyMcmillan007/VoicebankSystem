@@ -1,6 +1,7 @@
 @import url(https://fonts.googleapis.com/css?family=Seaweed+Script);
 h1 {
     color:cyan;
+    
 }
 
 table {
@@ -19,3 +20,11 @@ td, th{
 tr{
     background-color: black;
 }
+
+body {
+    background-image: url("front_background.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    background-attachment: fixed; 
+    }
