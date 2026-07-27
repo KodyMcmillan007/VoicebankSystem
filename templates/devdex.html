@@ -1,0 +1,21 @@
+<link rel="stylesheet" href = "{{url_for('static', filename = 'dev.css')}}"
+<html>
+    <head> 
+        <title>DevPage</title>
+    </head>
+    <body>
+        <h1> Welcome to the Dev page!</h1>
+        <table>
+        {% for line in send_data %}
+        <tr>
+            {% for item in line %}
+            <td>
+            {{ item }}
+            </td>
+            {% endfor %}
+            </tr>
+            {% endfor %}
+        </table>
+    </body>
+    </style>
+</html>
