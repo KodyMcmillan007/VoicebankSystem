@@ -1,4 +1,4 @@
-<link rel="stylesheet" href = "{{url_for('static', filename = 'main.css')}}"
+<link rel="stylesheet" href = "{{url_for('static', filename = 'main.css')}}">
 <html>
     <head> 
         <title>Voicebank Home Page</title>
@@ -45,7 +45,29 @@
     <a href="devdex.html">Dev Page</a>
     <a href="copyright.html">Song List Copyright©</a>
     </p>
-    <audio controls>
-        <source src="music/Spoken For ft. Kasane Teto - FLAVOR FOLEY.mp3" type="audio/mpeg">
-    </audio>
+
+    <div class="player-box">
+        {% if current_song %}
+            <h2> Music System </h2>
+            <h3> Current Song: {{current_song }}</h3>
+
+            <audio controls autoplay onended="window.location.href='/play/{{ next_id }}'">
+                <source src="{{ url_for('static', filename=current_song) }}" type="audio/mpeg">
+            </audio>
+
+            <div class="queue">
+                <h4> Track Queue:</h4>
+                {% for song in songs %}
+                    <a href="{{ url_for('play_track', track_id=loop.index0) }}"
+                        class="track {% if loop.index0 == current_id %}active{% endif %}">
+                            {{ loop.index }}. {{ song }}
+                    </a>
+                {% endfor %}
+            </div>
+        {% else %}
+            <h2> No Tracks Found In Files</h2>
+            <p> ERROR, PLEASE INSERT SONGS INTO STATIC .mp3 </p>
+        {% endif %}
+    </div>
+</body>
 </html>
