@@ -44,6 +44,7 @@
     <p class="footer">
     <a href="devdex.html">Dev Page</a>
     <a href="copyright.html">Song List Copyright©</a>
+    <a href="interfacesearch.html">Interface Search</a>
     </p>
 
     <div class="player-box">
@@ -52,7 +53,7 @@
             <h3> Current Song: {{current_song }}</h3>
 
             <audio controls autoplay onended="window.location.href='/play/{{ next_id }}'">
-                <source src="{{ url_for('static', filename=current_song) }}" type="audio/mpeg">
+                <source src="{{ url_for('static', filename=current_song) }}" type="apudio/meg">
             </audio>
 
             <div class="queue">
