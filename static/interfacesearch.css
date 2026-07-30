@@ -1,3 +1,4 @@
+@import url(https://fonts.googleapis.com/css?family=Courier+New);
 body {
     background-image: url("interface_background.png");
     background-repeat: no-repeat;
@@ -5,3 +6,8 @@ body {
     background-size: cover;
     background-attachment: fixed; 
     }
+
+h1 {
+    text-align: right;
+    font-family: 'Courier New', Courier, monospace;
+}

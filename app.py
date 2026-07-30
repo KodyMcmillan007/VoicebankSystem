@@ -75,7 +75,7 @@ def dev_system():
 def copyright():
     return render_template('copyright.html')
 #---------------------------------------------------
-@app.route('/searchsystem.html', methods=['GET', 'POST'])
+@app.route('/interfacesearch.html', methods=['GET', 'POST'])
 def voicebank_songs():
     storage_text = ""
     search_types = None
@@ -117,10 +117,10 @@ def voicebank_songs():
             storage_text = ("Please Insert A Stored Data")
     return render_template('interfacesearch.html', send_song_data = storage_text)
 #---------------------------------------------------
-@app.route('/searchsystem.html', methods=['GET', 'POST'])
+@app.route('/interfacesearch.html', methods=['GET', 'POST'])
 def producer_songs():
-    storage_text = ""
-    search_producer = None
+    return render_template('interfacesearch.html')
+
 
 #---------------------------------------------------
 
