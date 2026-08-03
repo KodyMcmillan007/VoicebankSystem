@@ -50,10 +50,10 @@
     <div class="player-box">
         {% if current_song %}
             <h2> Music System </h2>
-            <h3> Current Song: {{current_song }}</h3>
+            <h3> Current Song: {{current_song}}</h3>
 
             <audio controls autoplay onended="window.location.href='/play/{{ next_id }}'">
-                <source src="{{ url_for('static', filename=current_song) }}" type="apudio/meg">
+                <source src="{{ url_for('static', filename=current_song) }}" type="audio/meg">
             </audio>
 
             <div class="queue">

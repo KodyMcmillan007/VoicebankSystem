@@ -7,7 +7,7 @@ app.config['TEMPLATES_AUTO_RELOAD'] = True
 def get_song_list():
     # System to scan the static directory for audito files
     static_dir = os.path.join(app.root_path, 'static')
-#-------------DEBUG--------------------------------
+#-------------DEBUG---------------------------------
     print ("\n" + "="*50)
     print(f"DEBUG: Flask is searching for music within in:\n {static_dir}")
 
@@ -115,6 +115,8 @@ def voicebank_songs():
             print (storage_text)
         else:
             storage_text = ("Please Insert A Stored Data")
+        print (storage_text)
+        print (results)
     return render_template('interfacesearch.html', send_song_data = storage_text)
 #---------------------------------------------------
 @app.route('/interfacesearch.html', methods=['GET', 'POST'])
