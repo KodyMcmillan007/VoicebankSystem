@@ -14,3 +14,7 @@ td, th{
 tr{
     background-color: black;
 }
+
+.footer {
+    text-align: right;
+}
