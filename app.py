@@ -45,13 +45,13 @@ def play_track(track_id):
     # If no songs exist in the current state, show empty
     if not songs:
         return render_template('index.html', current_song=None, next_id=None, songs=songs, current_id=None)
-
+    # Find next track within the song
     if track_id >= len(songs) or track_id < 0:
         return redirect(url_for('play_track', track_id=0))
     current_song = songs[track_id]
 
     next_id = track_id + 1 if (track_id + 1) < len(songs) else 0
-
+    # Add songs into the index system
     return render_template(
         'index.html',
         current_song=current_song,
@@ -62,6 +62,7 @@ def play_track(track_id):
 #---------------------------------------------------
 @app.route('/devdex.html')
 def dev_system():
+    # Collect all data of main table
     db = sqlite3.connect("voicebank.db")
     cursor = db.cursor()
     sql = ("""SELECT *
@@ -77,7 +78,9 @@ def copyright():
 #---------------------------------------------------
 @app.route('/interfacesearch.html', methods=['GET', 'POST'])
 def voicebank_songs():
+    # Storage text to hold data
     storage_text = ""
+    # Search types left as empty
     search_types = None
     # Check if the user has clicked the submit button
     if request.method == 'POST':
@@ -104,6 +107,7 @@ def voicebank_songs():
             """)
             cursor.execute(sql)
             search_types = cursor.fetchall()
+            # If name is equal to the song storage of Voicebank, store songs
             for j in search_types:
                 sql = ("""SELECT Name
                 FROM Songs
@@ -111,7 +115,7 @@ def voicebank_songs():
                 """)
                 cursor.execute(sql,(j))
                 song_name = cursor.fetchall()
-                storage_text += " || " +str(song_name)
+                storage_text += " || " +str(song_name[0][0])
             print (storage_text)
         else:
             storage_text = ("Please Insert A Stored Data")
@@ -120,11 +124,36 @@ def voicebank_songs():
     return render_template('interfacesearch.html', send_song_data = storage_text)
 #---------------------------------------------------
 @app.route('/interfacesearch.html', methods=['GET', 'POST'])
-def producer_songs():
+def voicebank_cycle():
+    db = sqlite3.connect("voicebank.db")
+    cursor = db.cursor()
+    sql = ("""SELECT *
+            FROM Voicebank
+            """)
+    cursor.execute(sql)
+    resultsbase = cursor.fetchall()
+#---------------------------------------------------
+    voicebank_temp = list(resultsbase)
+    Company_Voicebank = list(None)
+    Type_Voicebank = list(None)
+#---------------------------------------------------
+    for i in range(voicebank_temp):
+        sql1 = (f"""SELECT Name 
+        FROM Company 
+        WHERE ID = {i};
+        """)
+        Company_Voicebank.append(sql1)
+        print (Company_Voicebank)
+#---------------------------------------------------
+    for k in range(voicebank_temp):
+        sql2 = (f"""SELECT Name
+        FROM Type
+        WHERE ID = {k};
+        """)
+        Type_Voicebank.append(sql2)
     return render_template('interfacesearch.html')
 #---------------------------------------------------
-
-
 if __name__ == '__main__':
     app.run(debug=True)
     get_song_list()
+#---------------------------------------------------
