@@ -71,7 +71,19 @@ def dev_system():
     cursor.execute(sql)
     results = cursor.fetchall()
     return render_template('devdex.html', send_data = results)
-#---------------------------------------------------
+@app.route('/interfacesearch.html')
+#-------------DEBUG---------------------------------
+def test_function():
+    # Collect all data of main table
+    db = sqlite3.connect("voicebank.db")
+    cursor = db.cursor()
+    sql = ("""SELECT *
+            FROM Voicebank
+            """)
+    cursor.execute(sql)
+    results = cursor.fetchall()
+    return render_template('interfacesearch.html', send_data = results)
+#-------------DEBUG ENDS----------------------------
 @app.route('/copyright.html')
 def copyright():
     return render_template('copyright.html')
@@ -143,7 +155,6 @@ def voicebank_cycle():
         WHERE ID = {i};
         """)
         Company_Voicebank.append(sql1)
-        print (Company_Voicebank)
 #---------------------------------------------------
     for k in range(voicebank_temp):
         sql2 = (f"""SELECT Name
@@ -151,7 +162,16 @@ def voicebank_cycle():
         WHERE ID = {k};
         """)
         Type_Voicebank.append(sql2)
-    return render_template('interfacesearch.html')
+#---------------------------------------------------
+    for i in range(len(voicebank_temp)):
+        voicebank_temp[i][2] = Company_Voicebank[i]
+#---------------------------------------------------
+    for i in range(len(voicebank_temp)):
+        voicebank_temp[i][4] = Type_Voicebank[i]
+#---------------------------------------------------
+    complete_voicebank = voicebank_temp
+    print (complete_voicebank)
+    return render_template('interfacesearch.html', complete_voicebank)
 #---------------------------------------------------
 if __name__ == '__main__':
     app.run(debug=True)
