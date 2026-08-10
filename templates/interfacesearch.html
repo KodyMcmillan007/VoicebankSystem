@@ -5,17 +5,7 @@
     </head>
     <body>
         <h1>InterFace Search!</h1>
-        <table>
-        {% for line in send_data %}
-        <tr>
-            {% for item in line %}
-                <td>
-            {{ item }}
-                </td>
-            {% endfor %}
-                </tr>
-            {% endfor %}
-        </table>
+
         <p class="footer">
         <form method="POST">
             <label for="username">Enter Voicebank:</label>
@@ -32,6 +22,20 @@
             <br>
             <a href="/">Back To Homepage</a>
         </p>
+
+        <table>
+            {% for line in complete_voicebank %}
+            <tr>
+                {% for item in line %}
+                    <td>
+                {{ item }}        
+                    </td>
+                {% endfor %}
+                    </tr>
+                {% endfor %}
+            </table>
+            </tr>
+        </table>
         </style>
     </body>
     
