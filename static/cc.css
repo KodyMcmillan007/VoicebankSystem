@@ -1,3 +1,11 @@
 .footer {
-    text-align: right;
+    text-align: left;
 }
+
+body {
+    background-image: url("Copyright_Background.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    background-attachment: fixed; 
+    }
