@@ -42,19 +42,22 @@
         </p>
     </style>
     <p class="footer">
-    <a href="devdex.html">Dev Page</a>
-    <a href="copyright.html">Song List Copyright©</a>
-    <a href="interfacesearch.html">Interface Search</a>
+    <a href="/devdex.html">Dev Page</a>
+    <a href="/copyright.html">Song List Copyright©</a>
+    <a href="/interfacesearch.html">Interface Search</a>
     </p>
 
     <div class="player-box">
         {% if current_song %}
             <h2> Music System </h2>
             <h3> Current Song: {{current_song}}</h3>
-
-            <audio controls autoplay onended="window.location.href='/play/{{ next_id }}'">
-                <source src="{{ url_for('static', filename=current_song) }}" type="audio/meg">
-            </audio>
+            {% for file in songs %}
+                {%if file == current_song %}
+                    <audio controls autoplay onended="window.location.href='/play/{{ next_id }}'">
+                        <source src={{ url_for('static', filename=file) }} type="audio/mpeg">
+                    </audio>
+                {% endif %}
+            {% endfor %}
 
             <div class="queue">
                 <h4> Track Queue:</h4>

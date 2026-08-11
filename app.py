@@ -19,24 +19,31 @@ def get_song_list():
     print("="*50 + "\n")
 #-------------DEBUG ENDS----------------------------
     if os.path.exists(static_dir):
-        return sorted([f for f in os.listdir(static_dir) if f.endswith(('.mp3', '.wav'))])
+        listy = sorted([f for f in os.listdir(static_dir) if f.endswith(('.mp3', '.wav'))])
+        print(listy)
+        return listy
     return []
 #---------------------------------------------------
 @app.route("/")
 def home():
+    song_list = get_song_list()
     db = sqlite3.connect("voicebank.db")
     cursor = db.cursor()
     sql = ("""SELECT *
             FROM Voicebank
             """)
     cursor.execute(sql)
-    results = cursor.fetchall()
-
-    return render_template('index.html', send_data = results)
+    return render_template(
+            'index.html',
+            current_song=song_list[0],
+            next_id=song_list[0],
+            songs=song_list,
+            current_id=song_list[0],
+        )
 #---------------------------------------------------
 @app.route('/')
 def index():
-    return redirect(url_for('play_track', track_id=0))
+    return redirect(url_for('static','play_track', track_id=0))
 #---------------------------------------------------
 @app.route("/play/<int:track_id>")
 def play_track(track_id):
@@ -134,7 +141,7 @@ def voicebank_songs():
         print (storage_text)
         print (results)
     return render_template('interfacesearch.html', send_song_data = storage_text)
-#---------------------------------------------------
+#-----------------------WIP-------------------------
 @app.route('/interfacesearch.html', methods=['GET', 'POST'])
 def voicebank_cycle():
     db = sqlite3.connect("voicebank.db")
@@ -172,8 +179,7 @@ def voicebank_cycle():
     complete_voicebank = voicebank_temp
     print (complete_voicebank)
     return render_template('interfacesearch.html', complete_voicebank)
-#---------------------------------------------------
+#-----------------------WIP ENDS--------------------
 if __name__ == '__main__':
     app.run(debug=True)
-    get_song_list()
 #---------------------------------------------------

@@ -19,18 +19,27 @@ def voicebank_cycle():
         FROM Company 
         WHERE ID = {i};
         """)
-        Temp_Company_Voicebank.append(sql1)
-    for i in Temp_Company_Voicebank:
-        Company_Voicebank.append(2)(i)
+        #print (Temp_Company_Voicebank)
+    for j in i:
+        Company_Voicebank.append(j[2])
+    print("-----------------------------------")
     print (Company_Voicebank)
+    print("-----------------------------------")
+    a = []
+    for i in Company_Voicebank:
+        sql2 = (f"""SELECT Name FROM Company WHERE ID = {i}""")
+        cursor.execute(sql2)
+        results_company = cursor.fetchall()
+        a.append(results_company)
+    print (a)
 #---------------------------------------------------
     for k in voicebank_temp:
-        sql2 = (f"""SELECT Name
+        sql3 = (f"""SELECT Name
         FROM Type
         WHERE ID = {k};
         """)
-        Type_Voicebank.append(sql2)
-        print (Type_Voicebank)
+        Type_Voicebank.append(sql3)
+        #print (Type_Voicebank)
 #---------------------------------------------------
     #for i in range(len(voicebank_temp)):
         #voicebank_temp[i][2] = Company_Voicebank[i]
