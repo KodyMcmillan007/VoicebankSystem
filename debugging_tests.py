@@ -9,9 +9,9 @@ def voicebank_cycle():
     resultsbase = cursor.fetchall()
 #---------------------------------------------------
     voicebank_temp = [resultsbase]
-    Temp_Company_Voicebank = []
+
     Company_Voicebank = []
-    Temp_Type_Voicebank = []
+
     Type_Voicebank = []
 #---------------------------------------------------
     for i in voicebank_temp:
@@ -19,36 +19,46 @@ def voicebank_cycle():
         FROM Company 
         WHERE ID = {i};
         """)
-        #print (Temp_Company_Voicebank)
     for j in i:
         Company_Voicebank.append(j[2])
-    print("-----------------------------------")
-    print (Company_Voicebank)
-    print("-----------------------------------")
     a = []
     for i in Company_Voicebank:
         sql2 = (f"""SELECT Name FROM Company WHERE ID = {i}""")
         cursor.execute(sql2)
         results_company = cursor.fetchall()
         a.append(results_company)
-    print (a)
-#---------------------------------------------------
     for k in voicebank_temp:
         sql3 = (f"""SELECT Name
-        FROM Type
+        FROM Types
         WHERE ID = {k};
         """)
-        Type_Voicebank.append(sql3)
-        #print (Type_Voicebank)
+    for l in k:
+        Type_Voicebank.append(l[4])
+    b = []
+    for c in Type_Voicebank:
+        sql4 = (f"""SELECT Name FROM Types WHERE ID = {c}""")
+        cursor.execute(sql4)
+        results_type = cursor.fetchall()
+        b.append(results_type)
+    print (b)
 #---------------------------------------------------
-    #for i in range(len(voicebank_temp)):
-        #voicebank_temp[i][2] = Company_Voicebank[i]
-    #print (Company_Voicebank)
+    vocaloid_list = []
+    for i in (voicebank_temp[0]):
+        vocaloid_temp = []
+        for j in range(len(i)):
+            if j == 2:
+                vocaloid_temp.append(a[j][0][0])
+            elif j == 4:
+                vocaloid_temp.append(b[j][0][0])
+            else:
+                vocaloid_temp.append(i[j])
+
+        vocaloid_list.append(vocaloid_temp)
+
+        print (vocaloid_temp)
+    print(vocaloid_list)
+    print ("-----------------------------")
+    print (voicebank_temp)
 #---------------------------------------------------
-    #for i in range(len(voicebank_temp)):
-        #voicebank_temp[i][4] = Type_Voicebank[i]
-    
-#---------------------------------------------------
-    complete_voicebank = voicebank_temp
-    #print (complete_voicebank)
+    complete_voicebank = vocaloid_list
 voicebank_cycle()

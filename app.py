@@ -77,7 +77,9 @@ def dev_system():
             """)
     cursor.execute(sql)
     results = cursor.fetchall()
+    print(results)
     return render_template('devdex.html', send_data = results)
+    
 @app.route('/interfacesearch.html')
 #-------------DEBUG---------------------------------
 def test_function():
@@ -141,7 +143,7 @@ def voicebank_songs():
         print (storage_text)
         print (results)
     return render_template('interfacesearch.html', send_song_data = storage_text)
-#-----------------------WIP-------------------------
+#---------------------------------------------------
 @app.route('/interfacesearch.html', methods=['GET', 'POST'])
 def voicebank_cycle():
     db = sqlite3.connect("voicebank.db")
@@ -152,34 +154,59 @@ def voicebank_cycle():
     cursor.execute(sql)
     resultsbase = cursor.fetchall()
 #---------------------------------------------------
-    voicebank_temp = list(resultsbase)
-    Company_Voicebank = list(None)
-    Type_Voicebank = list(None)
+    voicebank_temp = [resultsbase]
+
+    Company_Voicebank = []
+
+    Type_Voicebank = []
 #---------------------------------------------------
-    for i in range(voicebank_temp):
+    for i in voicebank_temp:
         sql1 = (f"""SELECT Name 
         FROM Company 
         WHERE ID = {i};
         """)
-        Company_Voicebank.append(sql1)
-#---------------------------------------------------
-    for k in range(voicebank_temp):
-        sql2 = (f"""SELECT Name
-        FROM Type
+    for j in i:
+        Company_Voicebank.append(j[2])
+    a = []
+    for i in Company_Voicebank:
+        sql2 = (f"""SELECT Name FROM Company WHERE ID = {i}""")
+        cursor.execute(sql2)
+        results_company = cursor.fetchall()
+        a.append(results_company)
+    for k in voicebank_temp:
+        sql3 = (f"""SELECT Name
+        FROM Types
         WHERE ID = {k};
         """)
-        Type_Voicebank.append(sql2)
+    for l in k:
+        Type_Voicebank.append(l[4])
+    b = []
+    for c in Type_Voicebank:
+        sql4 = (f"""SELECT Name FROM Types WHERE ID = {c}""")
+        cursor.execute(sql4)
+        results_type = cursor.fetchall()
+        b.append(results_type)
+    print (b)
 #---------------------------------------------------
-    for i in range(len(voicebank_temp)):
-        voicebank_temp[i][2] = Company_Voicebank[i]
+    vocaloid_list = []
+    for i in (voicebank_temp[0]):
+        vocaloid_temp = []
+        for j in range(len(i)):
+            if j == 2:
+                vocaloid_temp.append(a[j][0][0])
+            elif j == 4:
+                vocaloid_temp.append(b[j][0][0])
+            else:
+                vocaloid_temp.append(i[j])
+
+        vocaloid_list.append(vocaloid_temp)
+
+        print (vocaloid_temp)
+    print(vocaloid_list)
 #---------------------------------------------------
-    for i in range(len(voicebank_temp)):
-        voicebank_temp[i][4] = Type_Voicebank[i]
+    complete_voicebank = vocaloid_list
+    return render_template('interfacesearch.html', send_completed = complete_voicebank[0])
 #---------------------------------------------------
-    complete_voicebank = voicebank_temp
-    print (complete_voicebank)
-    return render_template('interfacesearch.html', complete_voicebank)
-#-----------------------WIP ENDS--------------------
 if __name__ == '__main__':
     app.run(debug=True)
 #---------------------------------------------------
