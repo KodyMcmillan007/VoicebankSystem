@@ -43,22 +43,23 @@ def voicebank_cycle():
     print (b)
 #---------------------------------------------------
     vocaloid_list = []
+    counter = 0
+    print(voicebank_temp[0])
     for i in (voicebank_temp[0]):
         vocaloid_temp = []
         for j in range(len(i)):
             if j == 2:
-                vocaloid_temp.append(a[j][0][0])
+                vocaloid_temp.append(a[counter][0][0])
             elif j == 4:
-                vocaloid_temp.append(b[j][0][0])
+                vocaloid_temp.append(b[counter][0][0])
             else:
                 vocaloid_temp.append(i[j])
+        counter += 1
 
         vocaloid_list.append(vocaloid_temp)
 
-        print (vocaloid_temp)
+        print (vocaloid_temp)        
     print(vocaloid_list)
-    print ("-----------------------------")
-    print (voicebank_temp)
 #---------------------------------------------------
     complete_voicebank = vocaloid_list
 voicebank_cycle()

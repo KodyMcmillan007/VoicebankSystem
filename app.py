@@ -29,10 +29,10 @@ def home():
     song_list = get_song_list()
     db = sqlite3.connect("voicebank.db")
     cursor = db.cursor()
-    sql = ("""SELECT *
+    unedited_query = ("""SELECT *
             FROM Voicebank
             """)
-    cursor.execute(sql)
+    cursor.execute(unedited_query)
     return render_template(
             'index.html',
             current_song=song_list[0],
@@ -72,10 +72,10 @@ def dev_system():
     # Collect all data of main table
     db = sqlite3.connect("voicebank.db")
     cursor = db.cursor()
-    sql = ("""SELECT *
+    unedited_query = ("""SELECT *
             FROM Voicebank
             """)
-    cursor.execute(sql)
+    cursor.execute(unedited_query)
     results = cursor.fetchall()
     print(results)
     return render_template('devdex.html', send_data = results)
@@ -86,10 +86,10 @@ def test_function():
     # Collect all data of main table
     db = sqlite3.connect("voicebank.db")
     cursor = db.cursor()
-    sql = ("""SELECT *
+    unedited_query = ("""SELECT *
             FROM Voicebank
             """)
-    cursor.execute(sql)
+    cursor.execute(unedited_query)
     results = cursor.fetchall()
     return render_template('interfacesearch.html', send_data = results)
 #-------------DEBUG ENDS----------------------------
@@ -110,11 +110,11 @@ def voicebank_songs():
         db = sqlite3.connect("voicebank.db")
         cursor = db.cursor()
         try:
-            sql = (f"""SELECT ID
+            voicebank_by_name_query = (f"""SELECT ID
             FROM Voicebank
             WHERE Name = '{voicesongs}';
             """)
-            cursor.execute(sql)
+            cursor.execute(voicebank_by_name_query)
             results = cursor.fetchall()
 
         except:
@@ -122,31 +122,29 @@ def voicebank_songs():
         print(results)
 #---------------------------------------------------
         if len(results) != 0:
-            sql = (f"""SELECT songs_id
+            name_equal_to_storage_query = (f"""SELECT songs_id
             FROM voicebank_songs
             WHERE voicebank_id = {results[0][0]};
             """)
-            cursor.execute(sql)
+            cursor.execute(name_equal_to_storage_query)
             search_types = cursor.fetchall()
             # If name is equal to the song storage of Voicebank, store songs
             for j in search_types:
-                sql = ("""SELECT Name
+                print("j",j)
+                song_id_query = ("""SELECT Name
                 FROM Songs
                 WHERE ID = ?;
                 """)
-                cursor.execute(sql,(j))
+                cursor.execute(song_id_query,(j))
                 song_name = cursor.fetchall()
+                print("Name", song_name)
                 storage_text += " || " +str(song_name[0][0])
-            print (storage_text)
+            print ("bleh", storage_text)
         else:
             storage_text = ("Please Insert A Stored Data")
-        print (storage_text)
-        print (results)
-    return render_template('interfacesearch.html', send_song_data = storage_text)
+        print ("boo",storage_text)
+        print ("Kody", results)
 #---------------------------------------------------
-@app.route('/interfacesearch.html', methods=['GET', 'POST'])
-def voicebank_cycle():
-    db = sqlite3.connect("voicebank.db")
     cursor = db.cursor()
     sql = ("""SELECT *
             FROM Voicebank
@@ -161,7 +159,7 @@ def voicebank_cycle():
     Type_Voicebank = []
 #---------------------------------------------------
     for i in voicebank_temp:
-        sql1 = (f"""SELECT Name 
+        comapny_by_id_query = (f"""SELECT Name 
         FROM Company 
         WHERE ID = {i};
         """)
@@ -169,12 +167,12 @@ def voicebank_cycle():
         Company_Voicebank.append(j[2])
     a = []
     for i in Company_Voicebank:
-        sql2 = (f"""SELECT Name FROM Company WHERE ID = {i}""")
-        cursor.execute(sql2)
+        company_by_name_query = (f"""SELECT Name FROM Company WHERE ID = {i}""")
+        cursor.execute(company_by_name_query)
         results_company = cursor.fetchall()
         a.append(results_company)
     for k in voicebank_temp:
-        sql3 = (f"""SELECT Name
+        types_by_id_query = (f"""SELECT Name
         FROM Types
         WHERE ID = {k};
         """)
@@ -182,30 +180,33 @@ def voicebank_cycle():
         Type_Voicebank.append(l[4])
     b = []
     for c in Type_Voicebank:
-        sql4 = (f"""SELECT Name FROM Types WHERE ID = {c}""")
-        cursor.execute(sql4)
+        types_by_name_query = (f"""SELECT Name FROM Types WHERE ID = {c}""")
+        cursor.execute(types_by_name_query)
         results_type = cursor.fetchall()
         b.append(results_type)
     print (b)
 #---------------------------------------------------
     vocaloid_list = []
+    counter = 0
+    print(voicebank_temp[0])
     for i in (voicebank_temp[0]):
         vocaloid_temp = []
         for j in range(len(i)):
             if j == 2:
-                vocaloid_temp.append(a[j][0][0])
+                vocaloid_temp.append(a[counter][0][0])
             elif j == 4:
-                vocaloid_temp.append(b[j][0][0])
+                vocaloid_temp.append(b[counter][0][0])
             else:
                 vocaloid_temp.append(i[j])
+        counter += 1
 
         vocaloid_list.append(vocaloid_temp)
 
-        print (vocaloid_temp)
+        print (vocaloid_temp)        
     print(vocaloid_list)
 #---------------------------------------------------
     complete_voicebank = vocaloid_list
-    return render_template('interfacesearch.html', send_completed = complete_voicebank[0])
+    return render_template('interfacesearch.html', send_song_data = storage_text, send_completed = complete_voicebank[0])
 #---------------------------------------------------
 if __name__ == '__main__':
     app.run(debug=True)
