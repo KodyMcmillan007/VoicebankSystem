@@ -24,26 +24,9 @@ def get_song_list():
         return listy
     return []
 #---------------------------------------------------
-@app.route("/")
-def home():
-    song_list = get_song_list()
-    db = sqlite3.connect("voicebank.db")
-    cursor = db.cursor()
-    unedited_query = ("""SELECT *
-            FROM Voicebank
-            """)
-    cursor.execute(unedited_query)
-    return render_template(
-            'index.html',
-            current_song=song_list[0],
-            next_id=song_list[0],
-            songs=song_list,
-            current_id=song_list[0],
-        )
-#---------------------------------------------------
 @app.route('/')
-def index():
-    return redirect(url_for('static','play_track', track_id=0))
+def home():
+    return redirect(url_for('play_track', track_id=0))
 #---------------------------------------------------
 @app.route("/play/<int:track_id>")
 def play_track(track_id):
@@ -150,63 +133,41 @@ def voicebank_songs():
             FROM Voicebank
             """)
     cursor.execute(sql)
-    resultsbase = cursor.fetchall()
 #---------------------------------------------------
-    voicebank_temp = [resultsbase]
-
-    Company_Voicebank = []
-
-    Type_Voicebank = []
+    db = sqlite3.connect("voicebank.db")
+    cursor = db.cursor()
+    #gets all voicebanks
+    voice_bank_query = ("""SELECT * 
+        FROM Voicebank""")
+    cursor.execute(voice_bank_query)
+    results_base = cursor.fetchall()
+    results = []
 #---------------------------------------------------
-    for i in voicebank_temp:
-        comapny_by_id_query = (f"""SELECT Name 
-        FROM Company 
-        WHERE ID = {i};
+
+    for voice_bank in results_base:
+        #gets the voice bank's company from the voice bank db
+        company_id = voice_bank[2]
+        company_query = (f"""SELECT * 
+        FROM Company
+        WHERE ID = {company_id};
         """)
-    for j in i:
-        Company_Voicebank.append(j[2])
-    a = []
-    for i in Company_Voicebank:
-        company_by_name_query = (f"""SELECT Name FROM Company WHERE ID = {i}""")
-        cursor.execute(company_by_name_query)
+        cursor.execute(company_query)
         results_company = cursor.fetchall()
-        a.append(results_company)
-    for k in voicebank_temp:
-        types_by_id_query = (f"""SELECT Name
+        company_string = results_company[0][1]
+
+        #gets the voice bank's type from the voice bank db
+        type_id = voice_bank[4]
+        type_query = (f"""SELECT * 
         FROM Types
-        WHERE ID = {k};
+        WHERE ID = {type_id};
         """)
-    for l in k:
-        Type_Voicebank.append(l[4])
-    b = []
-    for c in Type_Voicebank:
-        types_by_name_query = (f"""SELECT Name FROM Types WHERE ID = {c}""")
-        cursor.execute(types_by_name_query)
+        cursor.execute(type_query)
         results_type = cursor.fetchall()
-        b.append(results_type)
-    print (b)
-#---------------------------------------------------
-    vocaloid_list = []
-    counter = 0
-    print(voicebank_temp[0])
-    for i in (voicebank_temp[0]):
-        vocaloid_temp = []
-        for j in range(len(i)):
-            if j == 2:
-                vocaloid_temp.append(a[counter][0][0])
-            elif j == 4:
-                vocaloid_temp.append(b[counter][0][0])
-            else:
-                vocaloid_temp.append(i[j])
-        counter += 1
-
-        vocaloid_list.append(vocaloid_temp)
-
-        print (vocaloid_temp)        
-    print(vocaloid_list)
-#---------------------------------------------------
-    complete_voicebank = vocaloid_list
-    return render_template('interfacesearch.html', send_song_data = storage_text, send_completed = complete_voicebank[0])
+        type_string = results_type[0][1]
+        #-------------------------------------------
+        new_voice_bank = tuple((voice_bank[0],voice_bank[1], company_string, voice_bank[3],type_string, voice_bank[5]))
+        results.append(new_voice_bank)
+    return render_template('interfacesearch.html', send_song_data = storage_text, final = results)
 #---------------------------------------------------
 if __name__ == '__main__':
     app.run(debug=True)

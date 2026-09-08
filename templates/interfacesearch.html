@@ -10,7 +10,7 @@
         <form method="POST">
             <label for="username">Enter Voicebank:</label>
             <input type="text" ID="username" name="voicebank_id" required>
-            <button type="submit">Submint</button>
+            <button type="submit">Submit</button>
         </form>
         {% if send_song_data %}
             <p>This voicebank is within these songs, {{send_song_data}}</p>
@@ -23,6 +23,20 @@
             <a href="/">Back To Homepage</a>
         </p>
 
+        <table>
+            {% for line in final %}
+            <tr>
+                {% for item in line %}
+                    <td>
+                {{ item }}        
+                    </td>
+                {% endfor %}
+                    </tr>
+                {% endfor %}
+            </table>
+            </tr>
+        </table>
+        </style>
     </body>
     
 </html>
