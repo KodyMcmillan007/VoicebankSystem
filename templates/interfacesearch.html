@@ -22,7 +22,10 @@
             <br>
             <a href="/">Back To Homepage</a>
         </p>
-
+        <p class="footer">
+            <input type="checkbox" name="show_table">Show Table?<br>
+        </p>
+        {% if show_table %}
         <table>
             {% for line in final %}
             <tr>
@@ -37,6 +40,7 @@
             </tr>
         </table>
         </style>
+        {% endif %}
     </body>
     
 </html>
