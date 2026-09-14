@@ -5,6 +5,11 @@ app = Flask(__name__)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 #---------------------------------------------------
 def get_song_list():
+    '''The get song list uses a system to connect
+    towards the static folder, this than drags out all
+    data within the static folder. Once this happens, it
+    cycles through all files that end with mp3 or wav;
+    which than is stored for later use.'''
     # System to scan the static directory for audito files
     static_dir = os.path.join(app.root_path, 'static')
 #-------------DEBUG---------------------------------
@@ -30,6 +35,10 @@ def home():
 #---------------------------------------------------
 @app.route("/play/<int:track_id>")
 def play_track(track_id):
+    '''play track uses the information gathered from get song list
+    to than format all stored data to than be moved over using the render
+    template into the index html; this is done by cracking a track list and comparing
+    it to different variables. '''
     songs = get_song_list()
 
     # If no songs exist in the current state, show empty
@@ -82,6 +91,19 @@ def copyright():
 #---------------------------------------------------
 @app.route('/interfacesearch.html', methods=['GET', 'POST'])
 def voicebank_songs():
+    '''voicebank songs, is a two part function which does two
+    different things; the first is to store the data of the base database
+    to than overlay the base database, it's than cycled through and comapred to 
+    song ids that match what the user requested. This is than once more cycled through
+    to match all song id's that match which voicebank the user called, which is finally
+    sent through into a render template.
+    
+    The secondary part is to create a brand new table, instead of using the base
+    database system; this secondary part creates a brand new list of the overall data,
+    by cycling through to store the orginal data it than creates temporay lists/storage
+    for the company and type functions. Which is then turned from raw numbers into their
+    actual names; which is then reappended back into a new final list, and then finally
+    pushed into the render template to be turned into a table.'''
     # Storage text to hold data
     storage_text = ""
     # Search types left as empty
