@@ -33,6 +33,10 @@ def get_song_list():
 def home():
     return redirect(url_for('play_track', track_id=0))
 #---------------------------------------------------
+@app.route('/companyinformation.html')
+def company_information():
+    return render_template('companyinformation.html') 
+#---------------------------------------------------
 @app.route("/play/<int:track_id>")
 def play_track(track_id):
     '''play track uses the information gathered from get song list
@@ -189,7 +193,7 @@ def voicebank_songs():
         #-------------------------------------------
         new_voice_bank = tuple((voice_bank[0],voice_bank[1], company_string, voice_bank[3],type_string, voice_bank[5]))
         results.append(new_voice_bank)
-    return render_template('interfacesearch.html', send_song_data = storage_text, final = results)
+    return render_template('interfacesearch.html', final = results, send_song_data = storage_text)
 #---------------------------------------------------
 if __name__ == '__main__':
     app.run(debug=True)
