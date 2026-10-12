@@ -30,21 +30,13 @@
         </p>
         <b></b>
         <p>
-            Throughout each of these pages, different music will play; you can find the current
-            music that is being played at the top right of the screen, allowing you to pause or play it.
-            The types of music that play will change based on the infomation you pull, based on the voicebank 
-            data you want to know, the producer types, or one song.
-        </p>
-        <b></b>
-        <p>
             Because the music being played is not of this websites own creation, a copyright
             page exists which lists all producers of which music is able to be played.
         </p>
-    </style>
     <p class="footer">
+    <a href="/companyinformation.html">Company Information</a>
     <a href="/copyright.html">Song List Copyright©</a>
     <a href="/interfacesearch.html">Interface Search</a>
-    <a href="/companyinformation.html">Company Information</a>
     </p>
 
     <div class="player-box">
@@ -61,12 +53,15 @@
 
             <div class="queue">
                 <h4> Track Queue:</h4>
-                {% for song in songs %}
+                <div class="song-list-wrapper">
+                    {% for song in songs %}
                     <a href="{{ url_for('play_track', track_id=loop.index0) }}"
-                        class="track {% if loop.index0 == current_id %}active{% endif %}">
+                        class="track {% if loop.index0 == current_id %}active{% endif %} track-item">
                             {{ loop.index }}. {{ song }}
                     </a>
-                {% endfor %}
+                    {% endfor %}
+                </div>
+                
             </div>
         {% else %}
             <h2> No Tracks Found In Files</h2>

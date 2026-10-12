@@ -14,8 +14,6 @@ def get_song_list():
     static_dir = os.path.join(app.root_path, 'static')
 #-------------DEBUG---------------------------------
     print ("\n" + "="*50)
-    print(f"DEBUG: Flask is searching for music within in:\n {static_dir}")
-
     if os.path.exists(static_dir):
         all_files = os.listdir(static_dir)
         print(f"DEBUG: ALL File Found within inside that folder: {all_files}")
@@ -25,6 +23,9 @@ def get_song_list():
 #-------------DEBUG ENDS----------------------------
     if os.path.exists(static_dir):
         listy = sorted([f for f in os.listdir(static_dir) if f.endswith(('.mp3', '.wav'))])
+        #---------------WIP REWORK-------------
+        #listy = {f[:-4]:f for f in os.listdir(static_dir) if f.endswith(('.mp3', '.wav'))}
+        #---------------WIP REWORK--ENDS-------
         print(listy)
         return listy
     return []
@@ -75,25 +76,31 @@ def dev_system():
     results = cursor.fetchall()
     print(results)
     return render_template('devdex.html', send_data = results)
-    
-@app.route('/interfacesearch.html')
-#-------------DEBUG---------------------------------
-def test_function():
-    # Collect all data of main table
-    db = sqlite3.connect("voicebank.db")
-    cursor = db.cursor()
-    unedited_query = ("""SELECT *
-            FROM Voicebank
-            """)
-    cursor.execute(unedited_query)
-    results = cursor.fetchall()
-    return render_template('interfacesearch.html', send_data = results)
-#-------------DEBUG ENDS----------------------------
+#--------------------------------------------------- 
 @app.route('/copyright.html')
 def copyright():
-    return render_template('copyright.html')
+    return render_template('copyright.html') 
+#---------------------------------------------------
+@app.route('/show_table', methods=['POST'])
+def table_shower():
+    '''The Table_Shower allows a request form pull to happen between the html
+    side and the python backend, allowing us to drag out the function of show_table.
+    
+    The secondary function of this def function is to prerun the voicebank_songs def, 
+    allowing it to run the functions of that def function as if it had all the required code;
+    which it doesn't, its simply mimicing the ability to do said code and then rendering it
+    to tableshower.html'''
+    print(request.form.getlist("show_table"))
+    
+    results, storage_text = voicebank_songs()
+
+    return render_template('tableshower.html', final = results, send_song_data = storage_text)   
 #---------------------------------------------------
 @app.route('/interfacesearch.html', methods=['GET', 'POST'])
+def search_interface():
+    results, storage_text = voicebank_songs()
+    return render_template('interfacesearch.html', final = results, send_song_data = storage_text)
+#---------------------------------------------------
 def voicebank_songs():
     '''voicebank songs, is a two part function which does two
     different things; the first is to store the data of the base database
@@ -154,12 +161,6 @@ def voicebank_songs():
         print ("boo",storage_text)
         print ("Kody", results)
 #---------------------------------------------------
-    cursor = db.cursor()
-    sql = ("""SELECT *
-            FROM Voicebank
-            """)
-    cursor.execute(sql)
-#---------------------------------------------------
     db = sqlite3.connect("voicebank.db")
     cursor = db.cursor()
     #gets all voicebanks
@@ -169,7 +170,6 @@ def voicebank_songs():
     results_base = cursor.fetchall()
     results = []
 #---------------------------------------------------
-
     for voice_bank in results_base:
         #gets the voice bank's company from the voice bank db
         company_id = voice_bank[2]
@@ -193,7 +193,36 @@ def voicebank_songs():
         #-------------------------------------------
         new_voice_bank = tuple((voice_bank[0],voice_bank[1], company_string, voice_bank[3],type_string, voice_bank[5]))
         results.append(new_voice_bank)
-    return render_template('interfacesearch.html', final = results, send_song_data = storage_text)
+    return results, storage_text
+#---------------------------------------------------
+def voicebank_producers():
+    '''Voicebank_producers is a def function to call forward the information for interface page
+    based on finding informaiton by comparing the producers of songs by the information the user
+    wishes to ask the system itself.
+    
+    By following the same first function of the def voicebank_songs this own def function can create
+    a similar output of code and functionality.'''
+    # Holds the text for later use
+    Storage_producer_text = ""
+    # Search types left as empty
+    search_types = None
+    if request.method == "POST":
+        # Cycle through all and collect all data using HTML functions for producers.
+        producer_request = request.form.get("producer_id")
+        db = sqlite3.connect("voicebank.db")
+        cursor = db.cursor()
+        try:
+            producer_by_name_query = (f"""SELECT ID
+            FROM Producer
+            WHERE Name = '{producer_request}';
+            """)
+            cursor.execute(producer_by_name_query)
+            results = cursor.fetchall()
+
+        except:
+            print ("System Failure")
+        print(results)
+    return voicebank_producers()
 #---------------------------------------------------
 if __name__ == '__main__':
     app.run(debug=True)

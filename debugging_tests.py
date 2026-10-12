@@ -62,4 +62,51 @@ def voicebank_cycle():
     print(vocaloid_list)
 #---------------------------------------------------
     complete_voicebank = vocaloid_list
-voicebank_cycle()
+
+
+
+#-------------DEBUG---------------------------------
+def test_function():
+    # Collect all data of main table
+    db = sqlite3.connect("voicebank.db")
+    cursor = db.cursor()
+    unedited_query = ("""SELECT *
+            FROM Voicebank
+            """)
+    cursor.execute(unedited_query)
+    results = cursor.fetchall()
+    #return render_template('interfacesearch.html', send_data = results)
+#-------------DEBUG ENDS----------------------------
+
+
+#---------------------------------------------------
+def voicebank_producers():
+    '''Voicebank_producers is a def function to call forward the information for interface page
+    based on finding informaiton by comparing the producers of songs by the information the user
+    wishes to ask the system itself.
+    
+    By following the same first function of the def voicebank_songs this own def function can create
+    a similar output of code and functionality.'''
+    # Holds the text for later use
+    Storage_producer_text = ""
+    # Search types left as empty
+    search_types = None
+        # Cycle through all and collect all data using HTML functions for producers.
+    producer_request = ("producer_id")
+    db = sqlite3.connect("voicebank.db")
+    cursor = db.cursor()
+    try:
+        producer_by_name_query = (f"""SELECT ID
+        FROM Producer
+        WHERE Name = '{producer_request}';
+        """)
+        cursor.execute(producer_by_name_query)
+        results = cursor.fetchall()
+
+    except:
+            print ("System Failure")
+    print(results)
+    return None
+#---------------------------------------------------
+
+voicebank_producers()

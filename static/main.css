@@ -34,3 +34,13 @@ body {
 .footer {
     text-align: right;
 }
+
+.song-list-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.track-item {
+    text-decoration: none;
+    color: darkviolet;
+}

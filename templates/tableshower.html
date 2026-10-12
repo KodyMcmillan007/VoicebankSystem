@@ -1,0 +1,21 @@
+<link rel="stylesheet" href = "{{url_for('static', filename = 'interfacesearch.css')}}"
+
+<html>
+    <head>
+        <title>Showing table</title>
+    </head>
+
+    <table>
+        {% for line in final%}
+        <tr>
+            {% for item in line%}
+                <td>
+            {{ item }}        
+                </td>
+            {% endfor %}
+                </tr>
+            {% endfor %}
+        </tr>
+    </table>
+    <a href="/interfacesearch.html">Return To Search</a>
+</html>

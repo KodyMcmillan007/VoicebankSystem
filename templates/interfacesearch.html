@@ -7,14 +7,22 @@
         <h1>InterFace Search!</h1>
 
         <p class="footer">
-        <form method="POST">
-            <label for="username">Enter Voicebank:</label>
-            <input type="text" ID="username" name="voicebank_id" required>
-            <button type="submit">Submit</button>
-        </form>
-        {% if send_song_data %}
-            <p>This voicebank is within these songs, {{send_song_data}}</p>
-        {% endif %}
+            <form method="POST">
+                <label for="username">Enter Voicebank For Songs:</label>
+                <input type="text" ID="username" name="voicebank_id" required>
+                <button type="submit">Submit</button>
+            </form>
+            <p class="table-shower">
+                <form action="/show_table" method="post" class="table-form">
+                    <input type="submit" value="Show Table?">
+                </form>
+            </p>
+            <div class="voicebank-item-wrapper">
+                {% if send_song_data %}
+                <p>This voicebank is within these songs, {{send_song_data}}</p>
+                 {% endif %}
+            </div>
+            
         </p>
         <p class="footer">
             <br>
@@ -22,9 +30,7 @@
             <br>
             <a href="/">Back To Homepage</a>
         </p>
-        <p class="footer">
-            <input type="checkbox" name="show_table">Show Table?<br>
-        </p>
+        
         {% if show_table %}
         <table>
             {% for line in final %}
@@ -36,10 +42,8 @@
                 {% endfor %}
                     </tr>
                 {% endfor %}
-            </table>
             </tr>
         </table>
-        </style>
         {% endif %}
     </body>
     
