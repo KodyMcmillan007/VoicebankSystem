@@ -195,6 +195,7 @@ def voicebank_songs():
         results.append(new_voice_bank)
     return results, storage_text
 #---------------------------------------------------
+@app.route('/interface_producersearch.html', methods=['GET', 'POST'])
 def voicebank_producers():
     '''Voicebank_producers is a def function to call forward the information for interface page
     based on finding informaiton by comparing the producers of songs by the information the user
@@ -222,7 +223,31 @@ def voicebank_producers():
         except:
             print ("System Failure")
         print(results)
-    return voicebank_producers()
+    #---------------------------------------------------
+        if len(results) != 0:
+            name_equal_to_storage_query = (f"""SELECT Name
+            FROM Songs
+            WHERE Producer = {results[0][0]};
+            """)
+            cursor.execute(name_equal_to_storage_query)
+            search_types = cursor.fetchall()
+            # If name is equal to the song storage of Voicebank, store songs
+            for j in search_types:
+                print("j",j)
+                song_id_query = ("""SELECT Name
+                FROM Producer
+                WHERE ID = ?;
+                """)
+                cursor.execute(song_id_query,(j))
+                producer_name = cursor.fetchall()
+                print("Name", producer_name)
+                Storage_producer_text += " || " +str(producer_name[0][0])
+            print ("bleh", Storage_producer_text)
+        else:
+            Storage_producer_text = ("Please Insert A Stored Data")
+        print ("boo",Storage_producer_text)
+        print ("Kody", results)
+    return render_template("interface_producersearch.html", send_data = Storage_producer_text)
 #---------------------------------------------------
 if __name__ == '__main__':
     app.run(debug=True)
