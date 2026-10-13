@@ -96,6 +96,22 @@ def table_shower():
 
     return render_template('tableshower.html', final = results, send_song_data = storage_text)   
 #---------------------------------------------------
+@app.route('/tableshowerproducer.html', methods=['POST'])
+def shower_producer():
+    '''The shower_producer uses a very basic way to store all values from the
+    producer table; by simply doing a query to store all functional data into one area
+    and than sending said data into the web page.
+    
+    This data is than sorted into a basic easy table to be read for end users.'''
+    db = sqlite3.connect("voicebank.db")
+    cursor = db.cursor()
+    full_producers = ("""SELECT *
+            FROM Producer
+            """)
+    cursor.execute(full_producers)
+    results = cursor.fetchall()
+    return render_template('tableshowerproducer.html', send_table = results)
+#---------------------------------------------------
 @app.route('/interfacesearch.html', methods=['GET', 'POST'])
 def search_interface():
     results, storage_text = voicebank_songs()
@@ -210,6 +226,7 @@ def voicebank_producers():
     if request.method == "POST":
         # Cycle through all and collect all data using HTML functions for producers.
         producer_request = request.form.get("producer_id")
+        print(producer_request)
         db = sqlite3.connect("voicebank.db")
         cursor = db.cursor()
         try:
@@ -231,23 +248,81 @@ def voicebank_producers():
             """)
             cursor.execute(name_equal_to_storage_query)
             search_types = cursor.fetchall()
-            # If name is equal to the song storage of Voicebank, store songs
-            for j in search_types:
-                print("j",j)
-                song_id_query = ("""SELECT Name
-                FROM Producer
-                WHERE ID = ?;
-                """)
-                cursor.execute(song_id_query,(j))
-                producer_name = cursor.fetchall()
-                print("Name", producer_name)
-                Storage_producer_text += " || " +str(producer_name[0][0])
-            print ("bleh", Storage_producer_text)
+            #------------------------------------------
+            search_types = [song[0] for song in search_types]
+            print(" || ".join(search_types))
+            Storage_producer_text = (" || ".join(search_types))
+            
         else:
             Storage_producer_text = ("Please Insert A Stored Data")
-        print ("boo",Storage_producer_text)
-        print ("Kody", results)
     return render_template("interface_producersearch.html", send_data = Storage_producer_text)
+#---------------------------------------------------
+@app.route('/interface_producer&voicebank_by_songs.html', methods=['GET', 'POST'])
+def voicebank_producer_voicebank():
+    ''''''
+    # Holds text for later use
+    Storage_producer_text = ""
+    Storage_voicebank_text = ""
+    # Search types left as empty
+    search_types_songs = None
+    search_types_producer = None
+    search_types_voicebank = None
+    if request.method == "POST":
+        # Cycle through all and collect all data using HTML functions for song of choice.
+        song_request = request.form.get("song_id")
+        db = sqlite3.connect("voicebank.db")
+        cursor = db.cursor()
+        try:
+            song_by_name_query = (f"""SELECT ID
+            FROM Songs
+            WHERE Name = '{song_request}';
+            """)
+            cursor.execute(song_by_name_query)
+            results_song = cursor.fetchall()
+
+        except:
+            print ("Complete System failure")  
+        print(results_song)
+    #---------------------------------------------------
+        if len(results_song) != 0:
+            name_equal_to_storage_query_songs = (f"""SELECT voicebank_id
+            FROM voicebank_songs
+            WHERE songs_id = {results_song[0][0]};
+            """)
+            cursor.execute(name_equal_to_storage_query_songs)
+            search_types_songs = cursor.fetchall()
+            search_types_songs = [song[0] for song in search_types_songs]
+            print (search_types_songs)
+            #-----------------------------------------------
+            name_equal_to_storage_query_producer = (f"""SELECT Producer
+            FROM Songs 
+            WHERE ID = {results_song[0][0]};
+            """)
+            cursor.execute(name_equal_to_storage_query_producer)
+            search_types_producer = cursor.fetchall()
+            search_types_producer = [producer[0] for producer in search_types_producer]
+            print (search_types_producer)
+            #-----------------------------------------------
+            name_equal_to_storage_query_voicebank = (f"""SELECT Name
+            FROM Voicebank
+            WHERE ID = {search_types_songs[0]};
+            """)
+            print(name_equal_to_storage_query_voicebank)
+            cursor.execute(name_equal_to_storage_query_voicebank)
+            search_types_voicebank = cursor.fetchall()
+            search_types_voicebank = [voicebank[0] for voicebank in search_types_voicebank]
+            print (search_types_voicebank)
+            #-----------------------------------------------
+            print (" || ".join(str(search_types_producer)))
+            print (" || ".join(search_types_voicebank))
+            #-----------------------------------------------
+            Storage_producer_text = (" || ".join(str(search_types_producer)))
+            Storage_voicebank_text = (" || ".join(search_types_voicebank))
+        else: 
+            Storage_producer_text = ("Value is missing for storage_producer_text")
+            Storage_voicebank_text = ("Value is missing for storage_voicebank_text")
+
+    return render_template("interface_producer&voicebank_by_songs.html", send_data_producer = Storage_producer_text, send_data_voicebank = Storage_voicebank_text)
 #---------------------------------------------------
 if __name__ == '__main__':
     app.run(debug=True)

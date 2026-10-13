@@ -1,0 +1,53 @@
+<link rel="stylesheet" href = "{{url_for('static', filename = 'interfacesearch.css')}}">
+<html>
+    <head> 
+        <title>Interface_Producer System</title>
+    </head>
+    <body>
+        <h1>Producer Search!</h1>
+
+        <p class="footer">
+            <form method="POST">
+                <label for="username">Enter Song For Producer & Voicebank:</label>
+                <input type="text" ID="username" name="song_id" required>
+                <button type="submit">Submit</button>
+            </form>
+            <p class="table_producer-shower">
+                <form action="/tableshowerproducer.html" method="post" class="table-form">
+                    <input type="submit" value="Show Table?">
+                </form>
+            </p>
+            <div class="voicebank-item-wrapper">
+                {% if send_data_producer %}
+                <p>This song has the producer , {{send_data_producer}} </p>
+                 {% endif %}
+                {% if send_data_voicebank %}
+                <p>This song has the voicebank(s) , {{send_data_voicebank}}   ;</p>
+                 {% endif %}
+            </div>
+            
+        </p>
+        <p class="footer">
+            <br>
+            <br>
+            <br>
+            <a href="/interfacesearch.html">Return</a>
+        </p>
+        
+        {% if show_table %}
+        <table>
+            {% for line in final %}
+            <tr>
+                {% for item in line %}
+                    <td>
+                {{ item }}        
+                    </td>
+                {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tr>
+        </table>
+        {% endif %}
+    </body>
+    
+</html>
