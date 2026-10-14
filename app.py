@@ -267,6 +267,7 @@ def voicebank_producer_voicebank():
     search_types_songs = None
     search_types_producer = None
     search_types_voicebank = None
+    search_types_producer_true: None
     if request.method == "POST":
         # Cycle through all and collect all data using HTML functions for song of choice.
         song_request = request.form.get("song_id")
@@ -300,8 +301,17 @@ def voicebank_producer_voicebank():
             """)
             cursor.execute(name_equal_to_storage_query_producer)
             search_types_producer = cursor.fetchall()
-            search_types_producer = [producer[0] for producer in search_types_producer]
             print (search_types_producer)
+            #-----------------------------------------------
+            name_equal_to_storage_query_producer_true = (f"""SELECT Name
+            FROM Producer
+            WHERE ID = {search_types_producer[0][0]};
+            """)
+            print (name_equal_to_storage_query_producer_true)
+            cursor.execute(name_equal_to_storage_query_producer_true)
+            search_types_producer_true = cursor.fetchall
+            print (search_types_producer_true)
+            search_types_producer_true = [producer[0] for producer in search_types_producer_true]
             #-----------------------------------------------
             name_equal_to_storage_query_voicebank = (f"""SELECT Name
             FROM Voicebank
@@ -313,10 +323,10 @@ def voicebank_producer_voicebank():
             search_types_voicebank = [voicebank[0] for voicebank in search_types_voicebank]
             print (search_types_voicebank)
             #-----------------------------------------------
-            print (" || ".join(str(search_types_producer)))
+            print (" || ".join(str(search_types_producer_true)))
             print (" || ".join(search_types_voicebank))
             #-----------------------------------------------
-            Storage_producer_text = (" || ".join(str(search_types_producer)))
+            Storage_producer_text = (" || ".join(str(search_types_producer_true)))
             Storage_voicebank_text = (" || ".join(search_types_voicebank))
         else: 
             Storage_producer_text = ("Value is missing for storage_producer_text")
