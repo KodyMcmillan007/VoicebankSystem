@@ -1,0 +1,19 @@
+<link rel="stylesheet" href = "{{url_for('static', filename = 'interfacesearch.css')}}"
+
+<html>
+    <head>
+        <title>Showing table</title>
+    </head>
+        <table>
+        {% for line in send_table %}
+        <tr>
+            {% for item in line %}
+            <td>
+            {{ item }}
+            </td>
+            {% endfor %}
+            </tr>
+            {% endfor %}
+        </table>
+    <a href="/interface_producer&voicebank_by_songs.html">Return To Search</a>
+</html>
