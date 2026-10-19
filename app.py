@@ -274,16 +274,22 @@ def shower_songs():
     return render_template('tableshowersongs.html', send_table = results)
 #---------------------------------------------------
 @app.route('/interface_producer&voicebank_by_songs.html', methods=['GET', 'POST'])
-def voicebank_producer_voicebank():
-    ''''''
+def voicebank_producer_song():
+    '''Voicebank_producer_song; is a def function which cycles through five
+    different SQL pulls to gain the required information for the website of its type;
+    because of this it is highly likely an error can happen when another or new
+    features are added to this function.
+    
+    Be warned that one single misuse of a varible in this def function can and most
+    likely will result to the def function crashing.'''
     # Holds text for later use
     Storage_producer_text = ""
     Storage_voicebank_text = ""
     # Search types left as empty
     search_types_songs = None
-    search_types_producer = None
+    search_types_producer_id = None
     search_types_voicebank = None
-    search_types_producer_true: None
+    search_types_producer_name: None
     if request.method == "POST":
         # Cycle through all and collect all data using HTML functions for song of choice.
         song_request = request.form.get("song_id")
@@ -302,6 +308,7 @@ def voicebank_producer_voicebank():
         print(results_song)
     #---------------------------------------------------
         if len(results_song) != 0:
+            # The following four SQL pulls use different value pulls to create the correct listed and compounded information for the final website page.
             name_equal_to_storage_query_songs = (f"""SELECT voicebank_id
             FROM voicebank_songs
             WHERE songs_id = {results_song[0][0]};
@@ -311,23 +318,23 @@ def voicebank_producer_voicebank():
             search_types_songs = [song[0] for song in search_types_songs]
             print (search_types_songs)
             #-----------------------------------------------
-            name_equal_to_storage_query_producer = (f"""SELECT Producer
+            id_equal_to_storage_query_producer = (f"""SELECT Producer
             FROM Songs 
             WHERE ID = {results_song[0][0]};
             """)
-            cursor.execute(name_equal_to_storage_query_producer)
-            search_types_producer = cursor.fetchall()
-            print (search_types_producer)
+            cursor.execute(id_equal_to_storage_query_producer)
+            search_types_producer_id = cursor.fetchall()
+            print (search_types_producer_id)
             #-----------------------------------------------
-            name_equal_to_storage_query_producer_true = (f"""SELECT Name
+            name_equal_to_storage_query_producer = (f"""SELECT Name
             FROM Producer
-            WHERE ID = {search_types_producer[0][0]};
+            WHERE ID = {search_types_producer_id[0][0]};
             """)
-            print (name_equal_to_storage_query_producer_true)
-            cursor.execute(name_equal_to_storage_query_producer_true)
-            search_types_producer_true = cursor.fetchall()
-            print (search_types_producer_true)
-            search_types_producer_true = [producer[0] for producer in search_types_producer_true]
+            print (name_equal_to_storage_query_producer)
+            cursor.execute(name_equal_to_storage_query_producer)
+            search_types_producer_name = cursor.fetchall()
+            print (search_types_producer_name)
+            search_types_producer_name = [producer[0] for producer in search_types_producer_name]
             #-----------------------------------------------
             search_types_voicebank_list = []
             for voice_name in search_types_songs:
@@ -342,7 +349,7 @@ def voicebank_producer_voicebank():
                 search_types_voicebank_list.append(search_types_voicebank[0][0])
             print (search_types_voicebank_list)
             #-----------------------------------------------
-            Storage_producer_text = " || ".join(search_types_producer_true)
+            Storage_producer_text = " || ".join(search_types_producer_name)
             Storage_voicebank_text = " || ".join(search_types_voicebank_list)
         else: 
             Storage_producer_text = ("Value is missing for storage_producer_text")
